@@ -1,6 +1,7 @@
 'use strict';
 <% if (testFramework === 'mocha' || testFramework === 'jasmine') { %>
 import path from 'path';<% } %>
+import 'regenerator-runtime';
 import gulp from 'gulp';
 import glob from 'glob';
 import { KarmaServer, args } from './gulp/utils';
@@ -31,9 +32,7 @@ gulp.task('build', gulp.series(
 gulp.task('serve', gulp.series(
   gulp.parallel(
     'imagemin',
-    'copy'<% if (htmlOption === 'pug') { %>,
-    'pug'<% } else if (htmlOption === 'nunjucks') {  %>,
-    'nunjucks'<% } %><% if (cssOption === 'postcss') { %>,
+    'copy'<% if (cssOption === 'postcss') { %>,
     'postcss'<% } %><% if (cssOption === 'sass') { %>,
     'sass'<% } %>,
     'browserify',

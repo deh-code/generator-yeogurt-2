@@ -253,6 +253,7 @@ module.exports = class extends Generator {
     );
 
     // Gulp files
+    this.copyTpl(`lib/${this.htmlOption}-template-utils.js`, 'lib/template-utils.js', templateData);
     this.copyTpl('gulp/tasks/browserify.js', 'gulp/tasks/browserify.js', templateData);
     this.copyTpl('gulp/tasks/browserSync.js', 'gulp/tasks/browserSync.js', templateData);
     this.copyTpl('gulp/tasks/clean.js', 'gulp/tasks/clean.js', templateData);

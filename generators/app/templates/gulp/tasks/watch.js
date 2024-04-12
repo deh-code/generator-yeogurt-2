@@ -22,13 +22,13 @@ gulp.task('watch', (done) => {
     gulp.watch([
       `${dirs.source}/**/*.pug`,
       `${dirs.source}/${dirs.data}/**/*.{json,yaml,yml}`,
-    ], gulp.series('pug'));<% } else if (htmlOption === 'nunjucks') { %>
+    ]).on('change', browserSync.reload);<% } else if (htmlOption === 'nunjucks') { %>
 
     // Nunjucks Templates
     gulp.watch([
       `${dirs.source}/**/*.nunjucks`,
       `${dirs.source}/${dirs.data}/**/*.{json,yaml,yml}`,
-    ], gulp.series('nunjucks'));
+    ]).on('change', browserSync.reload);
     <% } %>
 
     // Copy
