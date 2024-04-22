@@ -1,28 +1,33 @@
 'use strict';
 
-import gulpLoadPlugins from 'gulp-load-plugins';
-import browserSyncLib from 'browser-sync';
-import pjson from '../package.json';
-import minimist from 'minimist';
+const browserSyncLib = require('browser-sync');
+const minimist = require('minimist');
+const pjson = require('../package.json');
 
-// Load all gulp plugins based on their names
-// EX: gulp-copy -> copy
-export const plugins = gulpLoadPlugins();<% if (testFramework !== 'none') { %>
-
+<% if (testFramework !== 'none') { %>
 // Create karma server
-export const KarmaServer = require('karma').Server;<% } %>
+const KarmaServer = require('karma').Server;<% } %>
 
 // Get package.json custom configuration
-export const config = Object.assign({}, pjson.config);
+const config = Object.assign({}, pjson.config);
 
 // Gather arguments passed to gulp commands
-export const args = minimist(process.argv.slice(2));
+const args = minimist(process.argv.slice(2));
 
 // Alias config directories
-export const dirs = config.directories;
+const dirs = config.directories;
 
 // Determine gulp task target destinations
-export const taskTarget = args.production ? dirs.destination : dirs.temporary;
+const taskTarget = args.production ? dirs.destination : dirs.temporary;
 
 // Create a new browserSync instance
-export const browserSync = browserSyncLib.create();
+const browserSync = browserSyncLib.create();
+
+module.exports = {
+  <% if (testFramework !== 'none') { %>KarmaServer,<% } %>
+  config,
+  args,
+  dirs,
+  taskTarget,
+  browserSync
+}

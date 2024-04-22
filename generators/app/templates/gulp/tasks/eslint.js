@@ -2,10 +2,10 @@
 
 'use strict';
 
-import path from 'path';
-import gulpif from 'gulp-if';
-import gulp from 'gulp';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const gulpif = require('gulp-if');
+const gulp = require('gulp');
+const eslint = require('gulp-eslint');
+const { config, browserSync } = require('../utils');
 
 let dirs = config.directories;
 
@@ -23,12 +23,12 @@ gulp.task('eslint', () => {
     )
     .pipe(browserSync.reload({ stream: true, once: true }))
     .pipe(
-      plugins.eslint({
+      eslint({
         useEslintrc: true
       })
     )
-    .pipe(plugins.eslint.format())
-    .pipe(gulpif(!browserSync.active, plugins.eslint.failAfterError()))
+    .pipe(eslint.format())
+    .pipe(gulpif(!browserSync.active, eslint.failAfterError()))
     .on('error', function() {
       if (!browserSync.active) {
         process.exit(1);

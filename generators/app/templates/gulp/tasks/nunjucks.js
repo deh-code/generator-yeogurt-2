@@ -1,20 +1,25 @@
 'use strict';
 
-import fs from 'fs';
-import path from 'path';
-import foldero from 'foldero';
-import nunjucks from 'gulp-nunjucks-html';
-import yaml from 'js-yaml';
-import gulp from 'gulp';
-import fancyLog from 'fancy-log';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const fs = require('fs');
+const path = require('path');
+const foldero = require('foldero');
+const nunjucks = require('gulp-nunjucks-html');
+const yaml = require('js-yaml');
+const gulp = require('gulp');
+const plumber = require('gulp-plumber');
+const htmlmin = require('gulp-htmlmin');
+const data = require('gulp-data');
+const fancyLog = require('fancy-log');
+const { args, config, taskTarget, browserSync } = require('../utils');
 
 let dirs = config.directories;
 let dest = path.join(taskTarget);
 let dataPath = path.join(dirs.source, dirs.data);
 
 // Nunjucks template compile
-gulp.task('nunjucks', () => {
+gulp.task('nunjucks', async () => {
+  const changed = (await import('gulp-changed')).default;
+
   let siteData = {};
   if (fs.existsSync(dataPath)) {
     // Convert directory to JS Object
@@ -52,10 +57,10 @@ gulp.task('nunjucks', () => {
     gulp
       // Ignore underscore prefix folders/files (ex. _custom-layout.nunjucks)
       .src(['**/*.nunjucks', '!{**/_*,**/_*/**}'], { cwd: dirs.source })
-      .pipe(plugins.changed(dest))
-      .pipe(plugins.plumber())
+      .pipe(changed(dest))
+      .pipe(plumber())
       .pipe(
-        plugins.data({
+        data({
           config: config,
           debug: !args.production,
           site: {
@@ -75,7 +80,7 @@ gulp.task('nunjucks', () => {
         fancyLog(err);
       })
       .pipe(
-        plugins.htmlmin({
+        htmlmin({
           collapseBooleanAttributes: true,
           conservativeCollapse: true,
           removeCommentsFromCDATA: true,

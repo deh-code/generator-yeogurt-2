@@ -1,17 +1,20 @@
 'use strict';
 
-import path from 'path';
-import glob from 'glob';
-import gulp from 'gulp';
-import browserify from 'browserify';
-import watchify from 'watchify';
-import envify from 'envify';
-import babelify from 'babelify';
-import vsource from 'vinyl-source-stream';
-import buffer from 'vinyl-buffer';
-import gulpif from 'gulp-if';
-import fancyLog from 'fancy-log';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const path = require('path');
+const { glob } = require('glob');
+const gulp = require('gulp');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const browserify = require('browserify');
+const watchify = require('watchify');
+const envify = require('envify');
+const babelify = require('babelify');
+const vsource = require('vinyl-source-stream');
+const buffer = require('vinyl-buffer');
+const gulpif = require('gulp-if');
+const fancyLog = require('fancy-log');
+const { args, config, taskTarget, browserSync } = require('../utils');
 
 let dirs = config.directories;
 let entries = config.entries;
@@ -57,11 +60,11 @@ let browserifyTask = (files, done) => {
         .pipe(vsource(entry))
         .pipe(buffer())
         .pipe(
-          gulpif(!args.production, plugins.sourcemaps.init({ loadMaps: true }))
+          gulpif(!args.production, sourcemaps.init({ loadMaps: true }))
         )
-        .pipe(gulpif(args.production, plugins.uglify()))
+        .pipe(gulpif(args.production, uglify()))
         .pipe(
-          plugins.rename(function(filepath) {
+          rename(function(filepath) {
             // Remove 'source' directory as well as prefixed folder underscores
             // Ex: 'src/_scripts' --> '/scripts'
             filepath.dirname = filepath.dirname
@@ -69,7 +72,7 @@ let browserifyTask = (files, done) => {
               .replace('_', '');
           })
         )
-        .pipe(gulpif(!args.production, plugins.sourcemaps.write('./')))
+        .pipe(gulpif(!args.production, sourcemaps.write('./')))
         .pipe(gulp.dest(dest))
         // Show which file was bundled and how long it took
         .on('end', function() {

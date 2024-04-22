@@ -1,11 +1,16 @@
 'use strict';
 
-import path from 'path';
-import autoprefixer from 'autoprefixer';
-import gulpif from 'gulp-if';
-import gulp from 'gulp';
-import fancyLog from 'fancy-log';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const path = require('path');
+const autoprefixer = require('autoprefixer');
+const gulpif = require('gulp-if');
+const gulp = require('gulp');
+const plumber = require('gulp-plumber');
+const sourcemaps = require('gulp-sourcemaps');
+const postcss = require('gulp-postcss');
+const rename = require('gulp-rename');
+const cssnano = require('gulp-cssnano');
+const fancyLog = require('fancy-log');
+const { args, config, taskTarget, browserSync } = require('../utils');
 
 let dirs = config.directories;
 let entries = config.entries;
@@ -15,8 +20,8 @@ let dest = path.join(taskTarget, dirs.styles.replace(/^_/, ''));
 gulp.task('sass', () => {
   return gulp
     .src(entries.css, { cwd: path.join(dirs.source, dirs.styles) })
-    .pipe(plugins.plumber())
-    .pipe(gulpif(!args.production, plugins.sourcemaps.init({ loadMaps: true })))
+    .pipe(plumber())
+    .pipe(gulpif(!args.production, sourcemaps.init({ loadMaps: true })))
     .pipe(
       require('gulp-sass')(require('sass'))({
         outputStyle: 'expanded',
@@ -30,16 +35,16 @@ gulp.task('sass', () => {
     .on('error', function(err) {
       fancyLog(err);
     })
-    .pipe(plugins.postcss([autoprefixer()]))
+    .pipe(postcss([autoprefixer()]))
     .pipe(
-      plugins.rename(function(path) {
+      rename(function(path) {
         // Remove 'source' directory as well as prefixed folder underscores
         // Ex: 'src/_styles' --> '/styles'
         path.dirname = path.dirname.replace(dirs.source, '').replace('_', '');
       })
     )
-    .pipe(gulpif(args.production, plugins.cssnano({ rebase: false })))
-    .pipe(gulpif(!args.production, plugins.sourcemaps.write('./')))
+    .pipe(gulpif(args.production, cssnano({ rebase: false })))
+    .pipe(gulpif(!args.production, sourcemaps.write('./')))
     .pipe(gulp.dest(dest))
     .pipe(browserSync.stream({ match: '**/*.css' }));
 });

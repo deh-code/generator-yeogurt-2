@@ -1,12 +1,17 @@
 'use strict';
 
-import path from 'path';
-import autoprefixer from 'autoprefixer';
-import gulpif from 'gulp-if';
-import gulp from 'gulp';
-import postCssImport from 'postcss-import';
-import fancyLog from 'fancy-log';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const path = require('path');
+const autoprefixer = require('autoprefixer');
+const gulpif = require('gulp-if');
+const gulp = require('gulp');
+const postcss = require('gulp-postcss');
+const sourcemaps = require('gulp-sourcemaps');
+const plumber = require('gulp-plumber');
+const rename = require('gulp-rename');
+const cssnano = require('gulp-cssnano');
+const postCssImport = require('postcss-import');
+const fancyLog = require('fancy-log');
+const { args, config, taskTarget, browserSync } = require('../utils');
 
 let dirs = config.directories;
 let entries = config.entries;
@@ -25,21 +30,21 @@ var postCssPlugins = [
 gulp.task('postcss', () => {
   return gulp
     .src(entries.css, { cwd: path.join(dirs.source, dirs.styles) })
-    .pipe(plugins.plumber())
-    .pipe(gulpif(!args.production, plugins.sourcemaps.init({ loadMaps: true })))
-    .pipe(plugins.postcss(postCssPlugins))
+    .pipe(plumber())
+    .pipe(gulpif(!args.production, sourcemaps.init({ loadMaps: true })))
+    .pipe(postcss(postCssPlugins))
     .on('error', function(err) {
       fancyLog(err);
     })
     .pipe(
-      plugins.rename(function(path) {
+      rename(function(path) {
         // Remove 'source' directory as well as prefixed folder underscores
         // Ex: 'src/_styles' --> '/styles'
         path.dirname = path.dirname.replace(dirs.source, '').replace('_', '');
       })
     )
-    .pipe(gulpif(args.production, plugins.cssnano({ rebase: false })))
-    .pipe(gulpif(!args.production, plugins.sourcemaps.write('./')))
+    .pipe(gulpif(args.production, cssnano({ rebase: false })))
+    .pipe(gulpif(!args.production, sourcemaps.write('./')))
     .pipe(gulp.dest(dest))
     .pipe(browserSync.stream({ match: '**/*.css' }));
 });

@@ -1,20 +1,22 @@
 'use strict';
 
-import path from 'path';
-import gulp from 'gulp';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const path = require('path');
+const gulp = require('gulp');
+const { config, taskTarget } = require('../utils');
 
 let dirs = config.directories;
 let dest = path.join(taskTarget);
 
 // Copy
-gulp.task('copy', () => {
+gulp.task('copy', async () => {
+  const changed = (await import('gulp-changed')).default;
+
   return gulp.src([
     '**/*',
     '!{**/\_*,**/\_*/**,*.md}'<% if (htmlOption === 'nunjucks') { %>,
     '!**/*.nunjucks'<% } else if (htmlOption === 'pug') { %>,
     '!**/*.pug'<% } %>
   ], { cwd: dirs.source })
-  .pipe(plugins.changed(dest))
+  .pipe(changed(dest))
   .pipe(gulp.dest(dest));
 });

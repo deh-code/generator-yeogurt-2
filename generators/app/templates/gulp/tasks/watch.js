@@ -1,7 +1,7 @@
 'use strict';
 
-import gulp from 'gulp';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const gulp = require('gulp');
+const { args, config, browserSync } = require('../utils');
 
 let dirs = config.directories;
 

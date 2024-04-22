@@ -1,28 +1,30 @@
 'use strict';
 
-import path from 'path';
-import gulpif from 'gulp-if';
-import pngquant from 'imagemin-pngquant';
-import gulp from 'gulp';
-import { plugins, args, config, taskTarget, browserSync } from '../utils';
+const path = require('path');
+const gulpif = require('gulp-if');
+const pngquant = require('imagemin-pngquant');
+const gulp = require('gulp');
+const { args, config, taskTarget, browserSync } = require('../utils');
 
 let dirs = config.directories;
 let dest = path.join(taskTarget, dirs.images.replace(/^_/, ''));
 
 // Imagemin
-gulp.task('imagemin', () => {
+gulp.task('imagemin', async () => {
+  const { default: imagemin, svgo } = (await import('gulp-imagemin'));
+  const changed = (await import('gulp-changed')).default;
+
   return gulp
     .src('**/*.{jpg,jpeg,gif,svg,png}', {
       cwd: path.join(dirs.source, dirs.images)
     })
-    .pipe(plugins.changed(dest))
+    .pipe(changed(dest))
     .pipe(
       gulpif(
         args.production,
-        plugins.imagemin(
+        imagemin(
           [
-            plugins.imagemin.jpegtran({ progressive: true }),
-            plugins.imagemin.svgo({ plugins: [{ removeViewBox: false }] })
+            svgo({ plugins: [{ removeViewBox: false }] })
           ],
           { use: [pngquant({ speed: 10 })] }
         )

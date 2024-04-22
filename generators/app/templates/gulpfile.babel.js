@@ -1,16 +1,16 @@
 'use strict';
-<% if (testFramework === 'mocha' || testFramework === 'jasmine') { %>
-import path from 'path';<% } %>
-import 'regenerator-runtime';
-import gulp from 'gulp';
-import glob from 'glob';
-import { KarmaServer, args } from './gulp/utils';
+<% if (testFramework !== 'none') { %>require { KarmaServer, args } = require('./gulp/utils'); <% } %>
+
+const path = require('path');
+const gulp = require('gulp');
+const { glob } = require('glob');
 
 // This will grab all js in the `gulp` directory
 // in order to load all gulp tasks
 glob.sync('./gulp/tasks/**/*.js').filter(function(file) {
   return (/\.(js)$/i).test(file);
 }).map(function(file) {
+  file = path.join(__dirname, file);
   require(file);
 });
 
