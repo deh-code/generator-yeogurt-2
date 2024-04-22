@@ -18,7 +18,7 @@ gulp.task('sass', () => {
     .pipe(plugins.plumber())
     .pipe(gulpif(!args.production, plugins.sourcemaps.init({ loadMaps: true })))
     .pipe(
-      plugins.sass({
+      require('gulp-sass')(require('sass'))({
         outputStyle: 'expanded',
         precision: 10,
         includePaths: [

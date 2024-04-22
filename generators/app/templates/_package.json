@@ -41,7 +41,8 @@
     "fancy-log": "1.3.3",
     "gulp-rev-delete-original": "0.2.3",
     "gulp-uglify": "~3.0.2",<% if (cssOption === 'sass') { %>
-    "gulp-sass": "~4.0.2",<% } %><% if (cssOption === 'postcss') { %>
+    "gulp-sass": "~5.1.0",
+    "sass": "~1.75.0",<% } %><% if (cssOption === 'postcss') { %>
     "postcss-import": "12.0.1",<% } %><% if (htmlOption === 'pug') { %>
     "gulp-pug": "~4.0.1",
     "pug": "~2.0.4",<% } %><% if (htmlOption === 'nunjucks') { %>
