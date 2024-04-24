@@ -19,36 +19,36 @@ const { args, config, taskTarget, browserSync } = require('../utils');
 let dirs = config.directories;
 let entries = config.entries;
 
-let browserifyTask = (files, done) => {
-  return files.map(entry => {
-    let dest = path.resolve(taskTarget);
+let browserifyTask = (entry) => {
+  let dest = path.resolve(taskTarget);
 
-    // Options
-    let customOpts = {
-      entries: [entry],
-      debug: true,
-      transform: [
-        babelify, // Enable ES6 features
-        envify // Sets NODE_ENV for better optimization of npm packages
-      ],
-      plugins: [
-        ['@babel/plugin-transform-regenerator']
-      ]
-    };
+  // Options
+  let customOpts = {
+    entries: [entry],
+    debug: true,
+    transform: [
+      babelify, // Enable ES6 features
+      envify // Sets NODE_ENV for better optimization of npm packages
+    ],
+    plugins: [
+      ['@babel/plugin-transform-regenerator']
+    ]
+  };
 
-    let bundler = browserify(customOpts);
+  let bundler = browserify(customOpts);
 
-    if (!args.production) {
-      // Setup Watchify for faster builds
-      let opts = Object.assign({}, watchify.args, customOpts);
-      bundler = watchify(browserify(opts));
-    }
+  if (!args.production) {
+    // Setup Watchify for faster builds
+    let opts = Object.assign({}, watchify.args, customOpts);
+    bundler = watchify(browserify(opts));
+  }
 
-    let rebundle = function() {
+  return new Promise((done) => {
+    let rebundle = function () {
       let startTime = new Date().getTime();
       bundler
         .bundle()
-        .on('error', function(err) {
+        .on('error', function (err) {
           fancyLog(
             'Browserify compile error:',
             '\n',
@@ -64,7 +64,7 @@ let browserifyTask = (files, done) => {
         )
         .pipe(gulpif(args.production, uglify()))
         .pipe(
-          rename(function(filepath) {
+          rename(function (filepath) {
             // Remove 'source' directory as well as prefixed folder underscores
             // Ex: 'src/_scripts' --> '/scripts'
             filepath.dirname = filepath.dirname
@@ -75,14 +75,16 @@ let browserifyTask = (files, done) => {
         .pipe(gulpif(!args.production, sourcemaps.write('./')))
         .pipe(gulp.dest(dest))
         // Show which file was bundled and how long it took
-        .on('end', function() {
+        .on('end', function () {
           let time = (new Date().getTime() - startTime) / 1000;
           fancyLog(
             entry +
             ' was browserified: ' +
             time + 's'
           );
+
           done();
+
           return browserSync.reload('*.js');
         });
     };
@@ -91,20 +93,16 @@ let browserifyTask = (files, done) => {
       bundler.on('update', rebundle); // on any dep update, runs the bundler
       bundler.on('log', fancyLog); // output build logs to terminal
     }
-    return rebundle();
+
+    rebundle();
   });
 };
 
 // Browserify Task
-gulp.task('browserify', done => {
-  glob(`${path.join(dirs.source, dirs.scripts)}/${entries.js}`, function(
-    err,
-    files
-  ) {
-    if (err) {
-      throw new Error(err);
-    }
+gulp.task('browserify', async () => {
+  const files = await glob(`${path.join(dirs.source, dirs.scripts)}/${entries.js}`);
 
-    return browserifyTask(files, done);
-  });
+  const tasks = files.map(browserifyTask);
+
+  await Promise.all(tasks);
 });
