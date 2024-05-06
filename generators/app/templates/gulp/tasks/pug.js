@@ -53,10 +53,10 @@ gulp.task('pug', async () => {
     fancyLog(config);
   }
 
-  return (
+  return await new Promise((done) => {
     gulp
       // Ignore underscore prefix folders/files (ex. _custom-layout.pug)
-      .src(['**/*.pug', '!{**/_*,**/_*/**}'], { cwd: dirs.source })
+      .src(['**/*.pug'], { cwd: dirs.source, ignore: ['**/_*', '**/_*/**'] })
       .pipe(changed(dest))
       .pipe(plumber())
       .pipe(
@@ -82,6 +82,6 @@ gulp.task('pug', async () => {
         })
       )
       .pipe(gulp.dest(dest))
-      .on('end', browserSync.reload)
-  );
+      .on('end', () => { done(); browserSync.reload(); });
+  })
 });

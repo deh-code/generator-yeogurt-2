@@ -11,12 +11,17 @@ let dest = path.join(taskTarget);
 gulp.task('copy', async () => {
   const changed = (await import('gulp-changed')).default;
 
-  return gulp.src([
-    '**/*',
-    '!{**/\_*,**/\_*/**,*.md}'<% if (htmlOption === 'nunjucks') { %>,
-    '!**/*.nunjucks'<% } else if (htmlOption === 'pug') { %>,
-    '!**/*.pug'<% } %>
-  ], { cwd: dirs.source })
-  .pipe(changed(dest))
-  .pipe(gulp.dest(dest));
+  return await new Promise((done) => {
+    gulp.src([
+      '**/*'
+    ], { cwd: dirs.source, ignore: [
+      '**/\_*',
+      '**/\_*/**',
+      '*.md'<% if (htmlOption === 'nunjucks') { %>,
+      '**/*.nunjucks'<% } else if (htmlOption === 'pug') { %>,
+      '**/*.pug'<% } %>]})
+    .pipe(changed(dest))
+    .pipe(gulp.dest(dest))
+    .on('end', done);
+  });
 });
