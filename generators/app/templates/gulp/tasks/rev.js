@@ -18,11 +18,26 @@ gulp.task('rev', () => {
     ['**', '!**/*.{ico,png,jpg,jpeg,gif,webp}'],
     { restore: true }
   );
+
   const htmlFilter = gulpFilter(['**', '!**/*.html'], { restore: true });
+
+  // avoid hash in the name of static assets
+  const staticAssetsFilter = gulpFilter((file) => {
+    const cssPath = path.join(dirs.destination, dirs.styles.replace(/^_/, ''));
+    const jsPath = path.join(dirs.destination, dirs.scripts.replace(/^_/, ''));
+
+    return (!['.css', '.js'].includes(file.extname)) || (file.path.includes(cssPath) || file.path.includes(jsPath))
+  },
+  {
+    restore: true
+  })
+
   return gulp
     .src(`**/*.{js,css,html}`, { cwd: dirs.destination })
     .pipe(htmlFilter)
+    .pipe(staticAssetsFilter)
     .pipe(gulpRev())
+    .pipe(staticAssetsFilter.restore)
     .pipe(htmlFilter.restore)
     .pipe(binaryAssetFilter)
     .pipe(gulpRevRewrite())
