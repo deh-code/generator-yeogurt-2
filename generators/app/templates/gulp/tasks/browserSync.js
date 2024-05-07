@@ -70,7 +70,12 @@ gulp.task('browserSync', () => {
         }
 
         if (hasChanged) {
-          await templateUtils.compile(templateFile, targetFile);
+          try {
+            await templateUtils.compile(templateFile, targetFile);
+          }
+          catch(ex) {
+            console.error(ex);
+          }
         }
 
         next();
