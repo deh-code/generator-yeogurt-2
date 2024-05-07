@@ -1,17 +1,17 @@
 'use strict';
 
-const path = require('path');
-const autoprefixer = require('autoprefixer');
-const gulpif = require('gulp-if');
-const gulp = require('gulp');
-const postcss = require('gulp-postcss');
-const sourcemaps = require('gulp-sourcemaps');
-const plumber = require('gulp-plumber');
-const rename = require('gulp-rename');
-const cssnano = require('gulp-cssnano');
-const postCssImport = require('postcss-import');
-const fancyLog = require('fancy-log');
-const { args, config, taskTarget, browserSync } = require('../utils');
+import path from 'path';
+import autoprefixer from 'autoprefixer';
+import gulpif from 'gulp-if';
+import gulp from 'gulp';
+import postcss from 'gulp-postcss';
+import sourcemaps from 'gulp-sourcemaps';
+import plumber from 'gulp-plumber';
+import rename from 'gulp-rename';
+import cssnano from 'gulp-cssnano';
+import postCssImport from 'postcss-import';
+import fancyLog from 'fancy-log';
+import { args, config, taskTarget, browserSync } from '../utils';
 
 let dirs = config.directories;
 let entries = config.entries;

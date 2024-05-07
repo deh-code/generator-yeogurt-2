@@ -1,20 +1,20 @@
 'use strict';
 
-const path = require('path');
-const { glob } = require('glob');
-const gulp = require('gulp');
-const sourcemaps = require('gulp-sourcemaps');
-const uglify = require('gulp-uglify');
-const rename = require('gulp-rename');
-const browserify = require('browserify');
-const watchify = require('watchify');
-const envify = require('envify');
-const babelify = require('babelify');
-const vsource = require('vinyl-source-stream');
-const buffer = require('vinyl-buffer');
-const gulpif = require('gulp-if');
-const fancyLog = require('fancy-log');
-const { args, config, taskTarget, browserSync } = require('../utils');
+import path from 'path';
+import { glob } from 'glob';
+import gulp from 'gulp';
+import sourcemaps from 'gulp-sourcemaps';
+import uglify from 'gulp-uglify';
+import rename from 'gulp-rename';
+import browserify from 'browserify';
+import watchify from 'watchify';
+import envify from 'envify';
+import babelify from 'babelify';
+import vsource from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
+import gulpif from 'gulp-if';
+import fancyLog from 'fancy-log';
+import { args, config, taskTarget, browserSync } from '../utils.js';
 
 let dirs = config.directories;
 let entries = config.entries;
@@ -104,5 +104,5 @@ gulp.task('browserify', async () => {
 
   const tasks = files.map(browserifyTask);
 
-  await Promise.all(tasks);
+  return await Promise.all(tasks);
 });

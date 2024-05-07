@@ -1,18 +1,19 @@
 'use strict';
-<% if (testFramework !== 'none') { %>require { KarmaServer, args } = require('./gulp/utils'); <% } %>
+<% if (testFramework !== 'none') { %>import { KarmaServer, args } from './gulp/utils.js'; <% } %>
 
-const path = require('path');
-const gulp = require('gulp');
-const { glob } = require('glob');
-
-// This will grab all js in the `gulp` directory
-// in order to load all gulp tasks
-glob.sync('./gulp/tasks/**/*.js').filter(function(file) {
-  return (/\.(js)$/i).test(file);
-}).map(function(file) {
-  file = path.join(__dirname, file);
-  require(file);
-});
+import gulp from 'gulp';
+import './gulp/tasks/clean.js';
+import './gulp/tasks/rev.js';
+import './gulp/tasks/browserSync.js';
+import './gulp/tasks/copy.js';<% if (htmlOption === 'pug') { %>
+import './gulp/tasks/pug.js';<% } else if (htmlOption === 'nunjucks') { %>
+import './gulp/tasks/nunjucks.js';<% } %><% if (cssOption === 'postcss') { %>
+import './gulp/tasks/postcss.js';<% } else if (cssOption === 'sass') { %>
+import './gulp/tasks/sass.js';<% } %>
+import './gulp/tasks/browserify.js';
+import './gulp/tasks/eslint.js';
+import './gulp/tasks/imagemin.js';
+import './gulp/tasks/watch.js';
 
 // Build production-ready code
 gulp.task('build', gulp.series(

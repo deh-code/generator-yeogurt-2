@@ -1,12 +1,13 @@
 'use strict';
 
-const gulp = require('gulp');
-const { config } = require('../utils');
+import gulp from 'gulp';
+import { config } from '../utils.js';
+import { deleteSync } from 'del';
 
 let dirs = config.directories;
 
 // Clean
-gulp.task('clean', async () => {
-  const del = (await import('del')).deleteAsync;
-  return del([dirs.temporary, dirs.destination])
+gulp.task('clean', (done) => {
+  deleteSync([dirs.temporary, dirs.destination]);
+  done();
 });

@@ -1,22 +1,22 @@
 'use strict';
 
-const path = require('path');
-const gulpif = require('gulp-if');
-const pngquant = require('imagemin-pngquant');
-const gulp = require('gulp');
-const { args, config, taskTarget, browserSync } = require('../utils');
+import path from 'path';
+import gulpif from 'gulp-if';
+import pngquant from 'imagemin-pngquant';
+import gulp from 'gulp';
+import { args, config, taskTarget, browserSync } from '../utils.js';
+import imagemin, {svgo} from 'gulp-imagemin';
+import changed from 'gulp-changed';
 
 let dirs = config.directories;
 let dest = path.join(taskTarget, dirs.images.replace(/^_/, ''));
 
 // Imagemin
-gulp.task('imagemin', async () => {
-  const { default: imagemin, svgo } = (await import('gulp-imagemin'));
-  const changed = (await import('gulp-changed')).default;
-
+gulp.task('imagemin', () => {
   return gulp
     .src('**/*.{jpg,jpeg,gif,svg,png}', {
-      cwd: path.join(dirs.source, dirs.images)
+      cwd: path.join(dirs.source, dirs.images),
+      encoding: false
     })
     .pipe(changed(dest))
     .pipe(

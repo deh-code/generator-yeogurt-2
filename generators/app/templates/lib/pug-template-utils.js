@@ -1,17 +1,17 @@
 'use strict'
 
-const fs = require('fs/promises');
-const { readFileSync } = require('fs');
-const { config } = require('../gulp/utils');
-const path = require('path');
-const foldero = require('foldero');
-const yaml = require('js-yaml');
-const pug = require('pug');
+import fs from 'fs/promises';
+import { readFileSync } from 'fs';
+import { config } from '../gulp/utils.js';
+import path from 'path';
+import foldero from 'foldero';
+import yaml from 'js-yaml';
+import pug from 'pug';
 
 const dirs = config.directories;
 const dataPath = path.join(dirs.source, dirs.data);
 
-module.exports = {
+export default {
   async getData(dataPath) {
     let siteData = {};
 

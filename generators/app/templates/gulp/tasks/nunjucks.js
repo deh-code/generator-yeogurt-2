@@ -1,25 +1,24 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const foldero = require('foldero');
-const nunjucks = require('gulp-nunjucks-html');
-const yaml = require('js-yaml');
-const gulp = require('gulp');
-const plumber = require('gulp-plumber');
-const htmlmin = require('gulp-htmlmin');
-const data = require('gulp-data');
-const fancyLog = require('fancy-log');
-const { args, config, taskTarget, browserSync } = require('../utils');
+import fs from 'fs';
+import path from 'path';
+import foldero from 'foldero';
+import nunjucks from 'gulp-nunjucks-html';
+import yaml from 'js-yaml';
+import gulp from 'gulp';
+import plumber from 'gulp-plumber';
+import htmlmin from 'gulp-htmlmin';
+import data from 'gulp-data';
+import changed from 'gulp-changed';
+import fancyLog from 'fancy-log';
+import { args, config, taskTarget, browserSync } from '../utils.js';
 
 let dirs = config.directories;
 let dest = path.join(taskTarget);
 let dataPath = path.join(dirs.source, dirs.data);
 
 // Nunjucks template compile
-gulp.task('nunjucks', async () => {
-  const changed = (await import('gulp-changed')).default;
-
+gulp.task('nunjucks', () => {
   let siteData = {};
   if (fs.existsSync(dataPath)) {
     // Convert directory to JS Object
@@ -56,7 +55,7 @@ gulp.task('nunjucks', async () => {
   return (
     gulp
       // Ignore underscore prefix folders/files (ex. _custom-layout.nunjucks)
-      .src(['**/*.nunjucks', '!{**/_*,**/_*/**}'], { cwd: dirs.source })
+      .src(['**/*.nunjucks'], { cwd: dirs.source, ignore: ['**/_*', '**/_*/**'] })
       .pipe(changed(dest))
       .pipe(plumber())
       .pipe(

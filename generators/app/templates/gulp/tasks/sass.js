@@ -1,16 +1,18 @@
 'use strict';
 
-const path = require('path');
-const autoprefixer = require('autoprefixer');
-const gulpif = require('gulp-if');
-const gulp = require('gulp');
-const plumber = require('gulp-plumber');
-const sourcemaps = require('gulp-sourcemaps');
-const postcss = require('gulp-postcss');
-const rename = require('gulp-rename');
-const cssnano = require('gulp-cssnano');
-const fancyLog = require('fancy-log');
-const { args, config, taskTarget, browserSync } = require('../utils');
+import path from 'path';
+import autoprefixer from 'autoprefixer';
+import gulpif from 'gulp-if';
+import gulp from 'gulp';
+import plumber from 'gulp-plumber';
+import sourcemaps from 'gulp-sourcemaps';
+import postcss from 'gulp-postcss';
+import rename from 'gulp-rename';
+import cssnano from 'gulp-cssnano';
+import fancyLog from 'fancy-log';
+import { args, config, taskTarget, browserSync } from '../utils.js';
+import gulpSass from 'gulp-sass';
+import * as sass from 'sass';
 
 let dirs = config.directories;
 let entries = config.entries;
@@ -23,7 +25,7 @@ gulp.task('sass', () => {
     .pipe(plumber())
     .pipe(gulpif(!args.production, sourcemaps.init({ loadMaps: true })))
     .pipe(
-      require('gulp-sass')(require('sass'))({
+      gulpSass(sass)({
         outputStyle: 'expanded',
         precision: 10,
         includePaths: [

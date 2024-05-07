@@ -1,11 +1,11 @@
 'use strict';
 
-const gulp = require('gulp');
-const { args, config, taskTarget, browserSync } = require('../utils');
-const path = require('path');
-const { cwd } = require('process');
-const fs = require('fs/promises');
-const templateUtils = require('../../lib/template-utils');
+import gulp from 'gulp';
+import { args, config, taskTarget, browserSync } from '../utils.js';
+import path from 'path';
+import { cwd } from 'process';
+import fs from 'fs/promises';
+import templateUtils from '../../lib/template-utils.js';
 
 // BrowserSync
 gulp.task('browserSync', () => {

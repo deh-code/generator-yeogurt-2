@@ -2,10 +2,10 @@
 
 'use strict';
 
-const gulpif = require('gulp-if');
-const gulp = require('gulp');
-const eslint = require('gulp-eslint');
-const { config, browserSync } = require('../utils');
+import gulpif from 'gulp-if';
+import gulp from 'gulp';
+import eslint from 'gulp-eslint';
+import { config, browserSync } from '../utils.js';
 
 let dirs = config.directories;
 

@@ -1,25 +1,24 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const foldero = require('foldero');
-const pug = require('pug');
-const yaml = require('js-yaml');
-const gulp = require('gulp');
-const plumber = require('gulp-plumber');
-const gulpPug = require('gulp-pug');
-const htmlmin = require('gulp-htmlmin');
-const fancyLog = require('fancy-log');
-const { args, config, taskTarget, browserSync } = require('../utils');
+import fs from 'fs';
+import path from 'path';
+import foldero from 'foldero';
+import pug from 'pug';
+import yaml from 'js-yaml';
+import gulp from 'gulp';
+import plumber from 'gulp-plumber';
+import gulpPug from 'gulp-pug';
+import htmlmin from 'gulp-htmlmin';
+import fancyLog from 'fancy-log';
+import { args, config, taskTarget, browserSync } from '../utils.js';
+import changed from 'gulp-changed';
 
 let dirs = config.directories;
 let dest = path.join(taskTarget);
 let dataPath = path.join(dirs.source, dirs.data);
 
 // Pug template compile
-gulp.task('pug', async () => {
-  const changed = (await import('gulp-changed')).default;
-
+gulp.task('pug', () => {
   let siteData = {};
   if (fs.existsSync(dataPath)) {
     // Convert directory to JS Object
@@ -53,35 +52,33 @@ gulp.task('pug', async () => {
     fancyLog(config);
   }
 
-  return await new Promise((done) => {
-    gulp
-      // Ignore underscore prefix folders/files (ex. _custom-layout.pug)
-      .src(['**/*.pug'], { cwd: dirs.source, ignore: ['**/_*', '**/_*/**'] })
-      .pipe(changed(dest))
-      .pipe(plumber())
-      .pipe(
-        gulpPug({
-          pug: pug,
-          pretty: true,
-          locals: {
-            config: config,
-            debug: true,
-            site: {
-              data: siteData
-            }
+  return gulp
+    // Ignore underscore prefix folders/files (ex. _custom-layout.pug)
+    .src(['**/*.pug'], { cwd: dirs.source, ignore: ['**/_*', '**/_*/**'] })
+    .pipe(changed(dest))
+    .pipe(plumber())
+    .pipe(
+      gulpPug({
+        pug: pug,
+        pretty: true,
+        locals: {
+          config: config,
+          debug: true,
+          site: {
+            data: siteData
           }
-        })
-      )
-      .pipe(
-        htmlmin({
-          collapseBooleanAttributes: true,
-          conservativeCollapse: true,
-          removeCommentsFromCDATA: true,
-          removeEmptyAttributes: true,
-          removeRedundantAttributes: true
-        })
-      )
-      .pipe(gulp.dest(dest))
-      .on('end', () => { done(); browserSync.reload(); });
-  })
+        }
+      })
+    )
+    .pipe(
+      htmlmin({
+        collapseBooleanAttributes: true,
+        conservativeCollapse: true,
+        removeCommentsFromCDATA: true,
+        removeEmptyAttributes: true,
+        removeRedundantAttributes: true
+      })
+    )
+    .pipe(gulp.dest(dest))
+    .on('end', browserSync.reload);
 });

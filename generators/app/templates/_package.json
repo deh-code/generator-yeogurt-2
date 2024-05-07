@@ -1,20 +1,21 @@
 {
   "name": "<%= projectName.toLowerCase() %>",
   "version": "0.0.1",
+  "type": "module",
   "dependencies": {
     "jquery": "~3.4.1",
     "normalize.css": "~8.0.1"
   },
   "devDependencies": {
-    "@babel/core": "~7.24.4",
-    "@babel/preset-env": "~7.24.4",
+    "@babel/core": "~7.24.5",
+    "@babel/preset-env": "~7.24.5",
     "@babel/register": "~7.23.7",
     "@babel/plugin-transform-regenerator": "~7.24.1",
     "babelify": "~10.0.0",
     "babel-eslint": "~10.1.0",
     "core-js": "~3.37.0",
     "regenerator-runtime": "~0.14.1",
-    "eslint": "~9.1.0",
+    "eslint": "~9.2.0",
     "eslint-config-prettier": "~9.1.0",
     "prettier": "~3.2.5",
     "lodash": "~4.17.4",
@@ -29,7 +30,7 @@
     "gulp-eslint": "~6.0.0",
     "gulp-htmlmin": "~5.0.1",
     "gulp-if": "~3.0.0",
-    "gulp-imagemin": "~9.0.0",
+    "gulp-imagemin": "~9.1.0",
     "gulp-load-plugins": "~2.0.0",
     "gulp-plumber": "~1.2.1",
     "gulp-postcss": "~10.0.0",
@@ -43,7 +44,7 @@
     "gulp-rev-delete-original": "0.2.3",
     "gulp-uglify": "~3.0.2",<% if (cssOption === 'sass') { %>
     "gulp-sass": "~5.1.0",
-    "sass": "~1.75.0",<% } %><% if (cssOption === 'postcss') { %>
+    "sass": "~1.76.0",<% } %><% if (cssOption === 'postcss') { %>
     "postcss-import": "12.0.1",<% } %><% if (htmlOption === 'pug') { %>
     "gulp-pug": "~5.0.0",
     "pug": "~3.0.2",<% } %><% if (htmlOption === 'nunjucks') { %>
@@ -56,7 +57,7 @@
     "browser-sync": "~3.0.2",
     "autoprefixer": "~10.4.19",
     "envify": "~4.1.0",
-    "imagemin-svgo": "~10.0.1",
+    "imagemin-svgo": "~11.0.0",
     "imagemin-pngquant": "~9.0.2",
     "js-yaml": "~4.1.0",
     "watchify": "~4.0.0",
