@@ -5,9 +5,8 @@ import gulp from 'gulp';
 import './gulp/tasks/clean.js';
 import './gulp/tasks/rev.js';
 import './gulp/tasks/browserSync.js';
-import './gulp/tasks/copy.js';<% if (htmlOption === 'pug') { %>
-import './gulp/tasks/pug.js';<% } else if (htmlOption === 'nunjucks') { %>
-import './gulp/tasks/nunjucks.js';<% } %><% if (cssOption === 'postcss') { %>
+import './gulp/tasks/copy.js';
+import './gulp/tasks/pug.js';<% if (cssOption === 'postcss') { %>
 import './gulp/tasks/postcss.js';<% } else if (cssOption === 'sass') { %>
 import './gulp/tasks/sass.js';<% } %>
 import './gulp/tasks/browserify.js';
@@ -19,9 +18,8 @@ import './gulp/tasks/watch.js';
 gulp.task('build', gulp.series(
   gulp.parallel(
     'copy',
-    'imagemin'<% if (htmlOption === 'pug') { %>,
-    'pug'<% } else if (htmlOption === 'nunjucks') { %>,
-    'nunjucks'<% } %><% if (cssOption === 'postcss') { %>,
+    'imagemin',
+    'pug'<% if (cssOption === 'postcss') { %>,
     'postcss'<% } else if (cssOption === 'sass') { %>,
     'sass'<% } %>,
     'browserify'

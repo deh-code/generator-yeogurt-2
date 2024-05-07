@@ -18,9 +18,8 @@ gulp.task('copy', () => {
       ignore: [
         '**/\_*',
         '**/\_*/**',
-        '*.md'<% if (htmlOption === 'nunjucks') { %>,
-        '**/*.nunjucks'<% } else if (htmlOption === 'pug') { %>,
-        '**/*.pug'<% } %>
+        '*.md',
+        '**/*.pug'
       ]})
     .pipe(changed(dest))
     .pipe(gulp.dest(dest))

@@ -16,7 +16,6 @@ module.exports = class extends Generator {
 
     // options
     this.projectName = fileJSON.projectName;
-    this.htmlOption = fileJSON.htmlOption;
 
     this.option('layout', {
       desc: 'Allow a custom layout for template to extend from',
@@ -63,10 +62,6 @@ module.exports = class extends Generator {
       layoutDir: this.layoutDir
     };
 
-    if (this.htmlOption === 'pug') {
-      this.copyTpl('page.pug', this.pageFile + '.pug', templateData);
-    } else if (this.htmlOption === 'nunjucks') {
-      this.copyTpl('page.nunjucks', this.pageFile + '.nunjucks', templateData);
-    }
+    this.copyTpl('page.pug', this.pageFile + '.pug', templateData);
   }
 };

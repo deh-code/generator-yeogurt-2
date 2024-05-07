@@ -3,9 +3,10 @@
 import path from 'path';
 import gulpif from 'gulp-if';
 import pngquant from 'imagemin-pngquant';
+import svgo from 'imagemin-svgo';
 import gulp from 'gulp';
 import { args, config, taskTarget, browserSync } from '../utils.js';
-import imagemin, {svgo} from 'gulp-imagemin';
+import imagemin from 'gulp-imagemin';
 import changed from 'gulp-changed';
 
 let dirs = config.directories;
@@ -24,9 +25,13 @@ gulp.task('imagemin', () => {
         args.production,
         imagemin(
           [
-            svgo({ plugins: [{ removeViewBox: false }] })
           ],
-          { use: [pngquant({ speed: 10 })] }
+          {
+            use: [
+              pngquant({ speed: 10 }),
+              svgo({ plugins: [{ removeViewBox: false }] })
+            ]
+          }
         )
       )
     )

@@ -16,27 +16,19 @@ gulp.task('watch', (done) => {
     gulp.watch([
       `${dirs.source}/${dirs.styles}/**/*.css`,
       `${dirs.source}/${dirs.modules}/**/*.css`,
-    ], gulp.series('postcss'));<% } %><% if (htmlOption === 'pug') { %>
+    ], gulp.series('postcss'));<% } %>
 
     // Pug Templates
     gulp.watch([
       `${dirs.source}/**/*.pug`,
       `${dirs.source}/${dirs.data}/**/*.{json,yaml,yml}`,
-    ]).on('change', browserSync.reload);<% } else if (htmlOption === 'nunjucks') { %>
-
-    // Nunjucks Templates
-    gulp.watch([
-      `${dirs.source}/**/*.nunjucks`,
-      `${dirs.source}/${dirs.data}/**/*.{json,yaml,yml}`,
     ]).on('change', browserSync.reload);
-    <% } %>
 
     // Copy
     gulp.watch([
       `${dirs.source}/**/*`,
-      `!${dirs.source}/{**/\_*,**/\_*/**}`<% if (htmlOption === 'nunjucks') { %>,
-      `!${dirs.source}/**/*.nunjucks`<% } else if (htmlOption === 'pug') { %>,
-      `!${dirs.source}/**/*.pug`<% } %>
+      `!${dirs.source}/{**/\_*,**/\_*/**}`,
+      `!${dirs.source}/**/*.pug`
     ], gulp.series('copy'));
 
     // Images

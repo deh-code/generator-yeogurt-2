@@ -58,24 +58,6 @@ module.exports = class extends Generator {
       },
       {
         type: 'list',
-        name: 'htmlOption',
-        message:
-          'Which ' + 'HTML preprocessor'.blue + ' would you like to use?',
-        choices: ['Pug', 'Nunjucks'],
-        when: function(answers) {
-          return !answers.existingConfig;
-        },
-        filter: function(val) {
-          var filterMap = {
-            Pug: 'pug',
-            Nunjucks: 'nunjucks'
-          };
-
-          return filterMap[val];
-        }
-      },
-      {
-        type: 'list',
         name: 'cssOption',
         message: 'What would you like to use to ' + 'write styles'.blue + '?',
         choices: ['Sass', 'PostCSS'],
@@ -143,7 +125,6 @@ module.exports = class extends Generator {
       this.projectName = _answers.projectName;
 
       // Client
-      this.htmlOption = _answers.htmlOption;
       this.jsFramework = _answers.jsFramework;
       this.jsOption = _answers.jsOption;
       this.cssOption = _answers.cssOption;
@@ -177,7 +158,6 @@ module.exports = class extends Generator {
       date: new Date().toISOString().split('T')[0],
       pkg: this.pkg,
       projectName: this.projectName,
-      htmlOption: this.htmlOption,
       jsFramework: this.jsFramework,
       jsOption: this.jsOption,
       cssOption: this.cssOption,
@@ -253,7 +233,7 @@ module.exports = class extends Generator {
     );
 
     // Gulp files
-    this.copyTpl(`lib/${this.htmlOption}-template-utils.js`, 'lib/template-utils.js', templateData);
+    this.copyTpl(`lib/pug-template-utils.js`, 'lib/template-utils.js', templateData);
     this.copyTpl('gulp/tasks/browserify.js', 'gulp/tasks/browserify.js', templateData);
     this.copyTpl('gulp/tasks/browserSync.js', 'gulp/tasks/browserSync.js', templateData);
     this.copyTpl('gulp/tasks/clean.js', 'gulp/tasks/clean.js', templateData);
@@ -264,11 +244,7 @@ module.exports = class extends Generator {
     this.copyTpl('gulp/tasks/rev.js', 'gulp/tasks/rev.js', templateData);
     this.copyTpl('gulp/utils.js', 'gulp/utils.js', templateData);
 
-    if (this.htmlOption === 'pug') {
-      this.copyTpl('gulp/tasks/pug.js', 'gulp/tasks/pug.js', templateData);
-    } else if (this.htmlOption === 'nunjucks') {
-      this.copyTpl('gulp/tasks/nunjucks.js', 'gulp/tasks/nunjucks.js', templateData);
-    }
+    this.copyTpl('gulp/tasks/pug.js', 'gulp/tasks/pug.js', templateData);
 
     if (this.cssOption === 'sass') {
       this.copyTpl('gulp/tasks/sass.js', 'gulp/tasks/sass.js', templateData);
@@ -277,36 +253,17 @@ module.exports = class extends Generator {
     }
 
     // Markup (HTML Preprocessors)
-    if (this.htmlOption === 'pug') {
-      this.copyTpl(
-        'src/static/pug/_layouts/base.pug',
-        'src/_layouts/base.pug',
-        templateData
-      );
-      this.copyTpl(
-        'src/static/pug/_modules/link/link.pug',
-        'src/_modules/link/link.pug',
-        templateData
-      );
-      this.copyTpl('src/static/pug/index.pug', 'src/index.pug', templateData);
-    }
-    if (this.htmlOption === 'nunjucks') {
-      this.copyTpl(
-        'src/static/nunjucks/_layouts/base.nunjucks',
-        'src/_layouts/base.nunjucks',
-        templateData
-      );
-      this.copyTpl(
-        'src/static/nunjucks/_modules/link/link.nunjucks',
-        'src/_modules/link/link.nunjucks',
-        templateData
-      );
-      this.copyTpl(
-        'src/static/nunjucks/index.nunjucks',
-        'src/index.nunjucks',
-        templateData
-      );
-    }
+    this.copyTpl(
+      'src/static/pug/_layouts/base.pug',
+      'src/_layouts/base.pug',
+      templateData
+    );
+    this.copyTpl(
+      'src/static/pug/_modules/link/link.pug',
+      'src/_modules/link/link.pug',
+      templateData
+    );
+    this.copyTpl('src/static/pug/index.pug', 'src/index.pug', templateData);
 
     // Styling (CSS Preprocessors)
     if (this.cssOption === 'postcss') {

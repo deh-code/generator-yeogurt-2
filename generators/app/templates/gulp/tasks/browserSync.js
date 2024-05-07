@@ -45,7 +45,7 @@ gulp.task('browserSync', () => {
         // the relative path to file without extension
         const filename = pathname.endsWith('/') ? pathname + 'index' : pathname.replace(/\.[^.]*$/, '');
 
-        const templateFile =  path.join(cwd(), config.directories.source, filename + '.<%= htmlOption %>');
+        const templateFile =  path.join(cwd(), config.directories.source, filename + '.pug');
 
         try {
           await fs.stat(templateFile);

@@ -5,7 +5,6 @@ This "Layouts" folder is designated for all page layouts.
 ## Example
 
 An example layout:
-<% if (htmlOption === 'pug') { %>
 
 ````pug
 extend ./base
@@ -23,28 +22,7 @@ block content
 
 //- Add extra scripts
 block append scripts
-```<% } else if (htmlOption === 'nunjucks') { %>
-```nunjucks
-{% extends "base.nunjucks" %}
-
-//- Add extra stylesheets
-{% block stylesheets %}{% endblock %}
-
-{% block content %}
-  //- Provides layout level markup
-  <div class="layout-wrapper two-col">
-    {% block first %}
-        //- Add first column content here
-    {% endblock %}
-    {% block second %}
-        //- Add second column content here
-    {% endblock %}
-  </div>
-{% endblock %}
-
-//- Add extra scripts
-{% block scripts %}{% endblock }
-```<% } %>
+```
 
 > NOTE: The `append stylesheets` and `append scripts` blocks allow you to add on any layout-specific scripts or stylesheets.
 > The `content` block is overriding the parent `base.pug` file's block by the same name since we are extending from it.
@@ -72,7 +50,7 @@ yo yeogurt:layout three-col --layout=two-col
 ````
 
 This new layout will look something like this:
-<% if (htmlOption === 'pug') { %>
+
 ```pug
 extend ./two-col
 
@@ -86,20 +64,4 @@ block content
 
 //- Add extra scripts
 block append scripts
-```<% } else if (htmlOption === 'nunjucks') { %>
-```nunjucks
-{% extends "two-col.nunjucks" %}
-
-//- Add extra stylesheets
-{% block stylesheets %}{% endblock %}
-
-{% block content %}
-  //- Provides layout level markup
-  <div class="layout-wrapper three-col">
-    {% block three-col %}{% endblock %}
-  </div>
-{% endblock %}
-
-//- Add extra scripts
-{% block scripts %}{% endblock }
-````<% } %>
+```

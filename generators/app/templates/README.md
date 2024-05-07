@@ -26,10 +26,8 @@ Styles<% if (cssOption === 'sass') { %>
 - [Sass](http://sass-lang.com/) via ([node-sass](https://github.com/sass/node-sass))<% } else if (cssOption === 'postcss') { %>
 - [PostCSS](https://github.com/postcss/postcss)<% } %>
 
-Markup<% if (htmlOption === 'pug') { %>
-
-- [Pug](https://pugjs.org/api/reference.html)<% } else if (htmlOption === 'nunjucks') { %>
-- [Nunjucks](https://mozilla.github.io/nunjucks/)<% } %>
+Markup
+- [Pug](https://pugjs.org/api/reference.html)
 
 Optimization
 

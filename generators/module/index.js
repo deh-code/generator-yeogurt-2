@@ -25,7 +25,6 @@ module.exports = class extends Generator {
     this.cssOption = fileJSON.cssOption;
     this.sassSyntax = fileJSON.sassSyntax;
     this.testFramework = fileJSON.testFramework;
-    this.htmlOption = fileJSON.htmlOption;
 
     this.option('atomic', {
       desc:
@@ -103,7 +102,7 @@ module.exports = class extends Generator {
       return;
     }
 
-    var htmlSuffix = this.htmlOption === 'pug' ? '.pug' : '.nunjucks';
+    var htmlSuffix = '.pug';
     var jsSuffix = '.js';
     var cssSuffix = this.getCssSuffix(this.cssOption, this.sassSyntax);
 

@@ -45,12 +45,9 @@
     "gulp-uglify": "~3.0.2",<% if (cssOption === 'sass') { %>
     "gulp-sass": "~5.1.0",
     "sass": "~1.76.0",<% } %><% if (cssOption === 'postcss') { %>
-    "postcss-import": "12.0.1",<% } %><% if (htmlOption === 'pug') { %>
+    "postcss-import": "12.0.1",<% } %>
     "gulp-pug": "~5.0.0",
-    "pug": "~3.0.2",<% } %><% if (htmlOption === 'nunjucks') { %>
-    "acorn": "~6.2.0",
-    "nunjucks": "~3.2.0",
-    "gulp-nunjucks-html": "~2.0.0",<% } %>
+    "pug": "~3.0.2",
     "vinyl-buffer": "~1.0.1",
     "vinyl-source-stream": "~2.0.0",
     "glob": "~10.3.12",
