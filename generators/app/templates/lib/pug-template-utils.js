@@ -7,6 +7,7 @@ import path from 'path';
 import foldero from 'foldero';
 import yaml from 'js-yaml';
 import pug from 'pug';
+import { cwd } from 'process';
 
 const dirs = config.directories;
 const dataPath = path.join(dirs.source, dirs.data);
@@ -42,12 +43,20 @@ export default {
     return siteData;
   },
 
-  async getModuleDependencies(pathname){
-    const content = (await fs.readFile(pathname)).toString();
+  async getModuleDependencies(content, pathname){
     const matches = content.matchAll(/(?:^|\s+)(?:extends|include)\s+(\S+)/g);
     const includes = Array.from(matches).map(match => match[1]);
 
-    return includes
+    const dirname = path.dirname(pathname);
+    return includes.map(dependency => path.join(dirname, dependency).replace(/\.[^.]+$/, '') + '.pug');
+  },
+
+  async getDataDependencies(content, pathname) {
+    const matches = content.matchAll(/site\.data(?:\.|\[')([a-zA-z-]+)/g);
+    const includes = Array.from(matches).map(match => match[1]);
+
+    const dirname = path.join(cwd(), dirs.source, dirs.data);
+    return includes.map(dependency => path.join(dirname, dependency) + '.json');
   },
 
   async hasChanged(pathname, targetStat, { visited }) {
@@ -66,13 +75,12 @@ export default {
 
     visited.set(pathname, true);
 
-    const dependencies = await this.getModuleDependencies(pathname);
-    const dirname = path.dirname(pathname);
+    const content = (await fs.readFile(pathname)).toString();
+    const getDependenciesTask = [this.getModuleDependencies(content, pathname), this.getDataDependencies(content, pathname)];
+    const dependencies = (await Promise.all(getDependenciesTask)).flat();
 
     for (const dependency of dependencies) {
-      const dependencyPath = path.join(dirname, dependency).replace(/\.[^.]+$/, '') + '.pug';
-
-      if (!visited.has(dependencyPath) && await this.hasChanged(dependencyPath, targetStat, { visited })) {
+      if (!visited.has(dependency) && await this.hasChanged(dependency, targetStat, { visited })) {
         return true;
       }
     }
