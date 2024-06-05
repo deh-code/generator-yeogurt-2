@@ -12,14 +12,16 @@ import htmlmin from 'gulp-htmlmin';
 import fancyLog from 'fancy-log';
 import { args, config, taskTarget, browserSync } from '../utils.js';
 import changed from 'gulp-changed';
+import templateUtils from '../../lib/template-utils.js'
 
 let dirs = config.directories;
 let dest = path.join(taskTarget);
 let dataPath = path.join(dirs.source, dirs.data);
 
 // Pug template compile
-gulp.task('pug', () => {
+gulp.task('pug', async () => {
   let siteData = {};
+
   if (fs.existsSync(dataPath)) {
     // Convert directory to JS Object
     siteData = foldero(dataPath, {
@@ -52,6 +54,8 @@ gulp.task('pug', () => {
     fancyLog(config);
   }
 
+  const helpers = await templateUtils.getHelpers();
+
   return gulp
     // Ignore underscore prefix folders/files (ex. _custom-layout.pug)
     .src(['**/*.pug'], { cwd: dirs.source, ignore: ['**/_*', '**/_*/**'] })
@@ -66,7 +70,8 @@ gulp.task('pug', () => {
           debug: true,
           site: {
             data: siteData
-          }
+          },
+          ...helpers
         }
       })
     )
