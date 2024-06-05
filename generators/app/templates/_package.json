@@ -17,6 +17,7 @@
     "regenerator-runtime": "~0.14.1",
     "eslint": "~9.2.0",
     "eslint-config-prettier": "~9.1.0",
+    "@faker-js/faker": "^8.4.1",
     "prettier": "~3.2.5",
     "lodash": "~4.17.4",
     "foldero": "~0.1.1",

@@ -11,6 +11,7 @@ import { cwd } from 'process';
 
 const dirs = config.directories;
 const dataPath = path.join(dirs.source, dirs.data);
+const helpersPath = path.join(cwd(), 'gulp', 'helpers');
 
 export default {
   async getData(dataPath) {
@@ -59,6 +60,25 @@ export default {
     return includes.map(dependency => path.join(dirname, dependency) + '.json');
   },
 
+  async getHelpers() {
+    const helpers = {};
+    const files = await fs.readdir(helpersPath);
+
+    const loadHelper = async (file) => {
+      const helperName = file.replace(/\.[^.]*$/, '');
+
+      helpers[helperName] = (await import(path.join(helpersPath, file))).default;
+
+      return;
+    }
+
+    const loadHelpers = files.map(loadHelper);
+
+    await Promise.all(loadHelpers);
+
+    return helpers;
+  },
+
   async hasChanged(pathname, targetStat, { visited }) {
     let stat;
 
@@ -94,6 +114,7 @@ export default {
     console.log('recompiling ' + templateFile);
 
     const siteData = await this.getData(dataPath);
+    const helpers = await this.getHelpers();
     const content = await fs.readFile(templateFile);
 
     const compile = pug.compile(content, {
@@ -105,6 +126,7 @@ export default {
       config,
       debug: true,
       site: { data: siteData },
+      ...helpers
     }));
 
     console.log(`recompiled ${templateFile}: ${Date.now() - start}ms`);
